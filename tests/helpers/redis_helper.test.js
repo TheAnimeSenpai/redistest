@@ -23,7 +23,7 @@ describe('Helper - Redis Helper Tests', () => {
     await _redisHelper.hset(messageData[2].id, messageData[2]);
     await _redisHelper.hset(messageData[3].id, messageData[3]);
 
-    let _entry = await _redisHelper.hgetAll();
+    let _entry = await _redisHelper.hgetAll('test_*');
     expect(_entry).toHaveLength(4);
   });
 
