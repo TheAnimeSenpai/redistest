@@ -29,18 +29,24 @@ class RedisHelper {
     );
   }
 
-  hgetAll() {
+  hgetAll(pattern) {
     return new Promise(accept =>
-      client.keys('test_*', (err, keys) => {
+      client.keys(pattern, (err, keys) => {
         if (err) {
           throw err;
+        }
+
+        if(keys.length <= 0) {
+          accept([]);
         }
 
         client.mget(keys, (err2, result) => {
           if (err2) {
             throw err2;
           }
-          accept(result);
+          let res = result.map(item => JSON.parse(item));
+
+          accept(res);
         });
       })
     );
