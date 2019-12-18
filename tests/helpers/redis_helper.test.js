@@ -3,10 +3,13 @@ const messageData = require('../../data/message');
 let RedisHelper = require('../../api/custom/redis_helper');
 let _redisHelper = new RedisHelper();
 
-afterAll(_redisHelper.close);
+afterAll(async () => {
+  await _redisHelper.close('test_*');
+});
 
 describe('Helper - Redis Helper Tests', () => {
   test('create entry in redis', async () => {
+    await _redisHelper.hdel(messageData[0].id);
     await _redisHelper.hset(messageData[0].id, messageData[0]);
 
     const _message = await _redisHelper.hget(messageData[0].id);

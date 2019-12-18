@@ -36,7 +36,7 @@ class RedisHelper {
           throw err;
         }
 
-        if(keys.length <= 0) {
+        if (keys.length <= 0) {
           accept([]);
         }
 
@@ -68,19 +68,24 @@ class RedisHelper {
     client.set(id, JSON.stringify(message));
   }
 
-  async close() {
-    await new Promise(accept => {
-      client.keys('test_*', (err, keys) => {
+  async clear(pattern) {
+    return new Promise(accept => {
+      client.keys(pattern, (err, keys) => {
         if (err) {
           throw err;
         }
 
-        console.log(keys);
-
         client.del.apply(client, keys);
-        client.quit();
-        accept();
+        accept(1);
       });
+    });
+  }
+
+  async close(pattern) {
+    await this.clear(pattern);
+    await new Promise(accept => {
+      client.quit();
+      accept();
     });
   }
 }
